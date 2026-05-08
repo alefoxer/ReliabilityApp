@@ -251,7 +251,7 @@
 
 **Ключевые функции:**
 
-- `select_method_for_scheme(scheme)` — полный pipeline выбора.
+- `select_method_for_scheme(scheme)` — полный конвейер выбора.
 - `analyze_scheme(scheme)` — извлечение признаков.
 - `build_scenario_candidates(analysis)` — список сценариев.
 - `build_method_candidates(analysis)` — список методов.

@@ -63,7 +63,7 @@ SchemeModel → NormalizedScheme → FormulaExpr → FormulaInfo
 
 После построения AST результат дополняется модулем `intelligent_formula_generator.py`. Он не подменяет базовую формулу, а объясняет, какие типовые формулы из `formula_library.py` применены к каждому фрагменту схемы.
 
-Pipeline:
+Конвейер:
 
 ```text
 FormulaExpr → фрагменты схемы → FormulaDefinition → подстановка N, m, λ, Tв → объяснение → FormulaInfo

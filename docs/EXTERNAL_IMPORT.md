@@ -1,85 +1,86 @@
-# Importing Reliability Schemes From External Sources
+# Импорт схем надежности из внешних источников
 
-## Current State
+## Текущее состояние
 
-The editor's native project format is the existing `SchemeModel` JSON saved by `scheme_storage.py`.
-It stores graph blocks, connections, numeric block parameters, nested subschemes and scheme metadata.
-Previously the application could load only this own JSON format; DOC/DOCX/PDF/XLSX were not reliable
-calculation inputs and were not converted into a calculation model.
+Родной формат проекта в редакторе — существующий JSON `SchemeModel`, который сохраняется через `scheme_storage.py`.
+Он хранит блоки графа, связи, численные параметры блоков, вложенные подсхемы и метаданные схемы.
+Раньше приложение могло надежно загружать только собственный JSON-формат; DOC/DOCX/PDF/XLSX не считались надежными
+расчетными входными данными и не преобразовывались напрямую в расчетную модель.
 
-The formula generator already works from the internal graph structure, not from a picture. The new import
-layer keeps that rule: external documents are sources of data, while calculation is performed only after
-normalization into a structured project.
+Генератор формул уже работает от внутренней структуры графа, а не от изображения. Новый слой импорта сохраняет это
+правило: внешние документы являются источниками данных, а расчет выполняется только после нормализации в структурированный
+проект.
 
-## Format Strategy
+## Стратегия форматов
 
-The supported pipeline is:
+Поддерживаемый конвейер:
 
-`external document -> extracted/reviewed data -> ImportedReliabilityProject JSON/YAML -> SchemeModel -> formula library -> calculation/report`.
+`внешний документ -> извлеченные/проверенные данные -> ImportedReliabilityProject JSON/YAML -> SchemeModel -> библиотека формул -> расчет/отчет`.
 
-Supported import levels:
+Поддерживаемые уровни импорта:
 
-- Reliable structured import: JSON is mandatory; YAML is supported through the project dependency `PyYAML`.
-- Semi-automatic document import: DOC/DOCX/PDF/XLSX should be treated as extraction sources for text,
-  tables and formulas, then reviewed and saved as JSON/YAML.
-- Manual review: damaged formulas, ambiguous tables and figure-only schemes must be marked for review.
-- Illustrations: images from documents may be kept for reports, but are not accepted as calculation
-  semantics unless blocks and connections are explicitly normalized.
+- Надежный структурированный импорт: JSON обязателен; YAML поддерживается через зависимость проекта `PyYAML`.
+- Полуавтоматический импорт документов: DOC/DOCX/PDF/XLSX следует рассматривать как источники для извлечения текста,
+  таблиц и формул с последующей ручной проверкой и сохранением в JSON/YAML.
+- Ручная проверка: поврежденные формулы, неоднозначные таблицы и схемы только в виде рисунков должны помечаться как
+  требующие проверки.
+- Иллюстрации: изображения из документов можно сохранять для отчетов, но они не считаются расчетной семантикой, пока
+  блоки и связи явно не нормализованы.
 
 ## ImportedReliabilityProject
 
-Top-level fields:
+Поля верхнего уровня:
 
-- `schema_version`: format version, currently `1.0`.
-- `project_name`: project title.
-- `source`: document/source metadata and confidence.
-- `requirements`: thresholds such as `P_min`, `K_min`, restore-time limits.
-- `calculation_conditions`: time values, operating mode, temperature and assumptions.
-- `components`: reusable elements with quantities and parameters.
-- `schemes`: normalized schemes with `series`, `parallel`, `reserve_group`, `element`, and `nested_scheme` nodes.
-- `formulas`: source formulas and their verification status.
-- `expected_results`: reference values for comparison.
-- `warnings`: import limitations shown to the user.
-- `manual_review_required`: items that must not be treated as verified.
+- `schema_version`: версия формата, сейчас `1.0`.
+- `project_name`: название проекта.
+- `source`: метаданные источника и оценка достоверности.
+- `requirements`: пороги, например `P_min`, `K_min`, ограничения по времени восстановления.
+- `calculation_conditions`: значения времени, режим работы, температура и допущения.
+- `components`: переиспользуемые элементы с количеством и параметрами.
+- `schemes`: нормализованные схемы с узлами `series`, `parallel`, `reserve_group`, `element` и `nested_scheme`.
+- `formulas`: исходные формулы и статус их проверки.
+- `expected_results`: эталонные значения для сравнения.
+- `warnings`: ограничения импорта, показываемые пользователю.
+- `manual_review_required`: элементы, которые нельзя считать проверенными автоматически.
 
-Example files:
+Примеры файлов:
 
-- `examples/imported/sne_emrtu_project.json` - reference SNE EMRTU normalized project.
-- `examples/imported/simple_series_project.yaml` - compact YAML example for a two-element series scheme.
-- UI button `Демо СНЭ` loads the SNE example, converts scheme `sne_top` into the editor graph,
-  runs calculation for `t = 158 h`, and shows comparison with imported reference values.
+- `examples/imported/sne_emrtu_project.json` — эталонный нормализованный проект СНЭ ЭМРТУ.
+- `examples/imported/simple_series_project.yaml` — компактный YAML-пример для последовательной схемы из двух элементов.
+- Кнопка интерфейса `Демо СНЭ` загружает пример СНЭ, преобразует схему `sne_top` в граф редактора, запускает расчет
+  для `t = 158 h` и показывает сравнение с импортированными эталонными значениями.
 
-## Formula Verification Status
+## Статус проверки формул
 
-Formula definitions now expose:
+Определения формул теперь содержат:
 
-- `project_method`: implemented project method, not an external normative claim.
-- `needs_review`: extracted or placeholder formula that requires manual verification.
-- `manual_required`: no safe automatic calculation method is available.
-- `gost_based`: reserved for formulas with an exact verified standard reference.
-- `verified`: reserved for formulas verified against the declared source.
+- `project_method`: реализованная проектная методика, а не утверждение о внешнем нормативном источнике.
+- `needs_review`: извлеченная или временная формула, требующая ручной проверки.
+- `manual_required`: нет безопасного автоматического метода расчета.
+- `gost_based`: зарезервировано для формул с точно проверенной ссылкой на стандарт.
+- `verified`: зарезервировано для формул, проверенных по заявленному источнику.
 
-The generator may use project methods for structural composition, but it must not label them as GOST.
-For unsupported k-of-N sliding loaded reserve, the import layer records `k_required` and `n_total`, adds a
-manual-review warning, and does not silently replace it with simple `reserve_count`.
+Генератор может использовать проектные методы для структурной композиции, но не должен помечать их как ГОСТ.
+Для неподдерживаемого скользящего нагруженного резерва k из N слой импорта записывает `k_required` и `n_total`,
+добавляет предупреждение о ручной проверке и не заменяет схему молча на простой `reserve_count`.
 
-Detailed status rules are described in `docs/FORMULA_VERIFICATION_STATUS.md`.
+Подробные правила статусов описаны в `docs/FORMULA_VERIFICATION_STATUS.md`.
 
-## Reference SNE Example
+## Эталонный пример СНЭ
 
-The SNE EMRTU document is used as an engineering reference dataset, not as a hard-coded parser template.
-The normalized example contains:
+Документ СНЭ ЭМРТУ используется как инженерный эталонный набор данных, а не как жестко заданный шаблон парсера.
+Нормализованный пример содержит:
 
-- Top-level SNE series scheme with six components from the reference result tables.
-- Per-time probabilities for `t = 158 h` and `t = 125 h`.
-- Availability values from the reference table.
-- A repeated-chain example for `N = 154`.
-- A reserve-group placeholder for `175 of 204`, marked `needs_review`.
-- Expected results for comparison.
+- Верхнеуровневую последовательную схему СНЭ с шестью компонентами из эталонных таблиц результатов.
+- Вероятности по времени для `t = 158 h` и `t = 125 h`.
+- Значения коэффициента готовности из эталонной таблицы.
+- Пример повторяющейся цепочки для `N = 154`.
+- Заготовку резервной группы `175 из 204`, помеченную как `needs_review`.
+- Ожидаемые результаты для сравнения.
 
-Known limitations:
+Известные ограничения:
 
-- Figure recognition is not considered reliable semantic import.
-- Some PDF/DOC formula text can be damaged by conversion.
-- The reference document contains apparent inconsistencies between table products and conclusion text;
-  the normalized example uses table values and records the inconsistency as a warning.
+- Распознавание рисунков не считается надежным семантическим импортом.
+- Часть текста формул из PDF/DOC может повреждаться при конвертации.
+- В эталонном документе есть видимые расхождения между произведениями в таблицах и текстом заключения; нормализованный
+  пример использует табличные значения и записывает расхождение как предупреждение.

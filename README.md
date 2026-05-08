@@ -44,7 +44,7 @@ run_app.bat
 
 Важно: `.venv` не должна переноситься между компьютерами. Это локальное окружение конкретного ПК. При переносе проекта копируйте исходники, а окружение создавайте заново через `run_app.ps1`.
 
-Перед изменением существующих файлов в проекте теперь обязательно создаются backup-копии. Порядок описан в [docs/BACKUP_AND_RESTORE.md](docs/BACKUP_AND_RESTORE.md).
+Перед изменением существующих файлов в проекте теперь обязательно создаются резервные копии. Порядок описан в [docs/BACKUP_AND_RESTORE.md](docs/BACKUP_AND_RESTORE.md).
 
 ### Запуск через VS Code
 
@@ -70,36 +70,36 @@ dist\ReliabilityApp.exe
 6. Нажмите `Рассчитать схему`.
 7. Нажмите `Проверить систему`, чтобы выполнить встроенную самопроверку генератора формул.
 
-## Project structure
+## Структура проекта
 
-The application code is now organized under the `app/` package. The detailed folder map is documented in [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
+Код приложения организован в пакете `app/`. Подробная карта папок описана в [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
 
-Key areas:
+Основные разделы:
 
-- `app/main.py` ? primary entrypoint for `python -m app.main`.
-- `main.py` ? compatibility wrapper for launching from the project root.
-- `gui_main.py` ? small compatibility wrapper for the old launch command.
-- `app/gui/` ? GUI files: main window, calculator, visual editor, dialogs, styles and help content.
-- `app/core/` ? models, calculation core, validators, normative methods, method selection and contribution analysis.
-- `app/formulas/` ? formula generation, packaging and rendering.
-- `app/reports/` ? HTML/TXT/PDF/DOCX/XLSX report export.
-- `app/import_export/` ? JSON/YAML import/export, scheme storage and scene image export.
-- `app/demo/` ? demo scenarios, built-in templates and `db_modules.json`.
-- `app/utils/` ? constants, logging and robust project path helpers.
-- `examples/`, `docs/`, `resources/`, `tests/`, `tools/` ? examples, docs, resources, tests and helper scripts.
+- `app/main.py` — основная точка входа для `python -m app.main`.
+- `main.py` — совместимая обертка для запуска из корня проекта.
+- `gui_main.py` — небольшая совместимая обертка для старой команды запуска.
+- `app/gui/` — файлы интерфейса: главное окно, калькулятор, визуальный редактор, диалоги, стили и справочные материалы.
+- `app/core/` — модели, расчетное ядро, валидаторы, нормативные методы, выбор методики и анализ вклада элементов.
+- `app/formulas/` — генерация, упаковка и отображение формул.
+- `app/reports/` — экспорт отчетов в HTML/TXT/PDF/DOCX/XLSX.
+- `app/import_export/` — импорт/экспорт JSON/YAML, хранение схем и экспорт изображений сцены.
+- `app/demo/` — демонстрационные сценарии, встроенные шаблоны и `db_modules.json`.
+- `app/utils/` — константы, логирование и надежные вспомогательные функции для путей проекта.
+- `examples/`, `docs/`, `resources/`, `tests/`, `tools/` — примеры, документация, ресурсы, тесты и вспомогательные скрипты.
 
-Main launch commands:
+Основные команды запуска:
 
 ```bash
 python -m app.main
 python main.py
 ```
 
-On Windows, `run_app.ps1` and `run_app.bat` remain available.
+На Windows также доступны `run_app.ps1` и `run_app.bat`.
 
 ## Документация
 
-- [Backup и восстановление](docs/BACKUP_AND_RESTORE.md)
+- [Резервные копии и восстановление](docs/BACKUP_AND_RESTORE.md)
 - [Руководство пользователя](docs/USER_GUIDE.md)
 - [Справочник интерфейса](docs/UI_REFERENCE.md)
 - [Формулы и методики](docs/FORMULAS_AND_METHODS.md)
@@ -125,12 +125,12 @@ pytest
 - сохранение/загрузку схем;
 - экспорт HTML, DOCX и XLSX.
 
-## Supported formats
+## Поддерживаемые форматы
 
-- Input schemes: JSON and YAML examples from `examples/`.
-- Report export: HTML, TXT, PDF, DOCX and XLSX.
-- Scheme image export: PNG and SVG.
-- Demo data: `app/demo/db_modules.json` and built-in Python templates.
+- Входные схемы: JSON и YAML-примеры из `examples/`.
+- Экспорт отчетов: HTML, TXT, PDF, DOCX и XLSX.
+- Экспорт изображения схемы: PNG и SVG.
+- Демонстрационные данные: `app/demo/db_modules.json` и встроенные Python-шаблоны.
 
 ## Ограничения текущей версии
 

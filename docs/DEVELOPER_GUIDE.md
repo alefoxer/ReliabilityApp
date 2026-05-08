@@ -105,7 +105,7 @@ pytest
 
 Генератор общей формулы по схеме. Он построен вокруг AST `FormulaExpr` и результата `FormulaGenerationResult`.
 
-Основной pipeline:
+Основной конвейер:
 
 ```text
 SchemeModel
