@@ -1,0 +1,172 @@
+{
+  "name": "СНЭ ЭМРТУ из PDF - 125 ч",
+  "blocks": [
+    {
+      "block_id": "start",
+      "name": "Start",
+      "kind": "in",
+      "x": 0.0,
+      "y": 0.0,
+      "params": {},
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "b1",
+      "name": "Энергоблок МКТН.563255.008",
+      "kind": "right",
+      "x": 180.0,
+      "y": 0.0,
+      "params": {
+        "lambda": 4.72000014e-10,
+        "Tv": 5.0,
+        "Kg": 0.999999997,
+        "t": 125.0
+      },
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "b2",
+      "name": "Энергоблок собственных нужд МКТН.563255.007",
+      "kind": "right",
+      "x": 390.0,
+      "y": 0.0,
+      "params": {
+        "lambda": 3.384000716e-09,
+        "Tv": 5.0,
+        "Kg": 0.99999998,
+        "t": 125.0
+      },
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "b3",
+      "name": "Подсистема управления электропитанием МКТН.794775.025",
+      "kind": "right",
+      "x": 660.0,
+      "y": 0.0,
+      "params": {
+        "lambda": 3.1168060715e-08,
+        "Tv": 3.0,
+        "Kg": 0.999999907,
+        "t": 125.0
+      },
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "b4",
+      "name": "Комплект силовых кабельных линий МКТН.468921.082",
+      "kind": "right",
+      "x": 930.0,
+      "y": 0.0,
+      "params": {
+        "lambda": 7.048003104e-09,
+        "Tv": 6.0,
+        "Kg": 0.999999958,
+        "t": 125.0
+      },
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "b5",
+      "name": "Комплект информационных кабельных линий МКТН.468921.083",
+      "kind": "right",
+      "x": 1200.0,
+      "y": 0.0,
+      "params": {
+        "lambda": 3.528000778e-09,
+        "Tv": 6.0,
+        "Kg": 0.999999979,
+        "t": 125.0
+      },
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "b6",
+      "name": "Распределительное устройство проходных коробок МКТН.674211.009",
+      "kind": "right",
+      "x": 1470.0,
+      "y": 0.0,
+      "params": {
+        "lambda": 2.4e-11,
+        "Tv": 3.0,
+        "Kg": 0.99999998,
+        "t": 125.0
+      },
+      "is_subscheme": false,
+      "nested_scheme": null
+    },
+    {
+      "block_id": "end",
+      "name": "End",
+      "kind": "out",
+      "x": 1710.0,
+      "y": 0.0,
+      "params": {},
+      "is_subscheme": false,
+      "nested_scheme": null
+    }
+  ],
+  "connections": [
+    {
+      "connection_id": "c1",
+      "source_id": "start",
+      "source_port": "out",
+      "target_id": "b1",
+      "target_port": "left"
+    },
+    {
+      "connection_id": "c2",
+      "source_id": "b1",
+      "source_port": "right",
+      "target_id": "b2",
+      "target_port": "left"
+    },
+    {
+      "connection_id": "c3",
+      "source_id": "b2",
+      "source_port": "right",
+      "target_id": "b3",
+      "target_port": "left"
+    },
+    {
+      "connection_id": "c4",
+      "source_id": "b3",
+      "source_port": "right",
+      "target_id": "b4",
+      "target_port": "left"
+    },
+    {
+      "connection_id": "c5",
+      "source_id": "b4",
+      "source_port": "right",
+      "target_id": "b5",
+      "target_port": "left"
+    },
+    {
+      "connection_id": "c6",
+      "source_id": "b5",
+      "source_port": "right",
+      "target_id": "b6",
+      "target_port": "left"
+    },
+    {
+      "connection_id": "c7",
+      "source_id": "b6",
+      "source_port": "right",
+      "target_id": "end",
+      "target_port": "in"
+    }
+  ],
+  "metadata": {
+    "source_pdf": "МКТН_563255_005_02_РР3_Система_накопелния_и_хранения_энергии_ЭМРТУ.pdf",
+    "scenario": "table4_125h_and_table5_kg",
+    "note": "Схема подготовлена для точного воспроизведения таблицы 4 на 125 ч и таблицы 5 по Kg."
+  },
+  "version": 2
+}

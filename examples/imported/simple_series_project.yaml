@@ -1,0 +1,34 @@
+schema_version: "1.0"
+project_name: "Simple YAML reliability import example"
+source:
+  type: manual
+  document: "example.yaml"
+  confidence: high
+calculation_conditions:
+  t_values_h: [10]
+components:
+  - id: A
+    name: "Element A"
+    parameters:
+      probability_by_time:
+        "10": 0.95
+      availability: 0.99
+  - id: B
+    name: "Element B"
+    parameters:
+      probability_by_time:
+        "10": 0.9
+      availability: 0.98
+schemes:
+  - id: main
+    name: "Two elements in series"
+    type: series
+    root:
+      type: series
+      children: [A, B]
+expected_results:
+  main:
+    P_10: 0.855
+    Kg: 0.9702
+warnings:
+  - "YAML is an exchange format; calculation still uses normalized SchemeModel."

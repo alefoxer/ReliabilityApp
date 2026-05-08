@@ -1,0 +1,64 @@
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test / coverage / tooling caches
+.pytest_cache/
+.pytest_*/
+.pytest_basetemp*/
+.pytest_workspace_tmp/
+tmp_*/
+tmp_report_check/
+tmp_pytest_run*/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Build artifacts
+build/
+dist/
+*.exe
+!ReliabilityApp.spec
+
+# Logs
+logs/
+*.log
+
+# Generated reports and exports
+otchet_nadezhnosti__*.html
+otchet_nadezhnosti__*.docx
+otchet_nadezhnosti__*.xlsx
+otchet_nadezhnosti__*.pdf
+otchet_nadezhnosti__*.txt
+dannye_rascheta__*.xlsx
+rezultaty_rascheta__*.txt
+schema_nadezhnosti__*.png
+schema_nadezhnosti__*.svg
+grafik_nadezhnosti__*.png
+tmp_excel_formula_white_bg.xlsx
+
+# Generated render/check artifacts
+deliverables/pdf_snhe_verification_render/
+
+# Local backup copies
+backup/
+
+# Service / extracted materials
+.codex_doc_extract/
+
+# Local IDE settings
+.vscode/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini

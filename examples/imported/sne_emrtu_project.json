@@ -1,0 +1,321 @@
+{
+  "schema_version": "1.0",
+  "project_name": "SNE EMRTU reliability calculation - normalized import example",
+  "source": {
+    "type": "external_document",
+    "document": "MKTN_563255_005_02_RR3_Systema_nakopleniya_i_hraneniya_energii_EMRTU.pdf",
+    "role": "engineering reference example, not a hard-coded template",
+    "confidence": "medium"
+  },
+  "requirements": {
+    "P_min_158": 0.998,
+    "K_min": 0.98,
+    "T_restore_max_h": 8
+  },
+  "calculation_conditions": {
+    "t_values_h": [158, 125],
+    "mode": "continuous",
+    "temperature_c": 50,
+    "notes": [
+      "Values are normalized from the reference engineering calculation.",
+      "Figure recognition is not treated as a reliable semantic source."
+    ]
+  },
+  "components": [
+    {
+      "id": "B1",
+      "name": "Energy block MKTN.563255.008",
+      "quantity": 1,
+      "parameters": {
+        "block_role": "k_of_n",
+        "reserve_type": "sliding_loaded",
+        "k_required": 175,
+        "n_total": 204,
+        "calculation_note": "The 175-of-204 reserve group is shown as one aggregate block; P/Kg are taken from the reviewed reference table.",
+        "recovery_time": 5,
+        "availability": 0.999999997,
+        "probability_by_time": {
+          "158": 0.999988706,
+          "125": 0.999999941
+        }
+      },
+      "source_table": "tables 4 and 5",
+      "confidence": "high"
+    },
+    {
+      "id": "B2",
+      "name": "Auxiliary energy block MKTN.563255.007",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 5,
+        "availability": 0.99999998,
+        "probability_by_time": {
+          "158": 0.999918418,
+          "125": 0.999999577
+        }
+      },
+      "source_table": "tables 4 and 5",
+      "confidence": "high"
+    },
+    {
+      "id": "B2A",
+      "name": "Auxiliary internal chain part 1",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 5,
+        "availability": 0.999999995,
+        "probability_by_time": {
+          "158": 0.9999796038760057,
+          "125": 0.9999998942499833
+        }
+      },
+      "source_table": "derived from table 4 aggregate B2 for visual nested demo",
+      "confidence": "demo"
+    },
+    {
+      "id": "B2B",
+      "name": "Auxiliary internal chain part 2",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 5,
+        "availability": 0.999999995,
+        "probability_by_time": {
+          "158": 0.9999796038760057,
+          "125": 0.9999998942499833
+        }
+      },
+      "source_table": "derived from table 4 aggregate B2 for visual nested demo",
+      "confidence": "demo"
+    },
+    {
+      "id": "B2C",
+      "name": "Auxiliary internal chain part 3",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 5,
+        "availability": 0.999999995,
+        "probability_by_time": {
+          "158": 0.9999796038760057,
+          "125": 0.9999998942499833
+        }
+      },
+      "source_table": "derived from table 4 aggregate B2 for visual nested demo",
+      "confidence": "demo"
+    },
+    {
+      "id": "B2D",
+      "name": "Auxiliary internal chain part 4",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 5,
+        "availability": 0.999999995,
+        "probability_by_time": {
+          "158": 0.9999796038760057,
+          "125": 0.9999998942499833
+        }
+      },
+      "source_table": "derived from table 4 aggregate B2 for visual nested demo",
+      "confidence": "demo"
+    },
+    {
+      "id": "B3",
+      "name": "Power control subsystem MKTN.794775.025",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 3,
+        "availability": 0.999999907,
+        "probability_by_time": {
+          "158": 0.999248387,
+          "125": 0.999996104
+        }
+      },
+      "source_table": "tables 4 and 5",
+      "confidence": "high"
+    },
+    {
+      "id": "B4",
+      "name": "Power cable lines kit MKTN.468921.082",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 6,
+        "availability": 0.999999958,
+        "probability_by_time": {
+          "158": 0.999829933,
+          "125": 0.999999119
+        }
+      },
+      "source_table": "tables 4 and 5",
+      "confidence": "high"
+    },
+    {
+      "id": "B5",
+      "name": "Information cable lines kit MKTN.468921.083",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 6,
+        "availability": 0.999999979,
+        "probability_by_time": {
+          "158": 0.999914963,
+          "125": 0.999999559
+        }
+      },
+      "source_table": "tables 4 and 5",
+      "confidence": "high"
+    },
+    {
+      "id": "B6",
+      "name": "Distribution unit of junction boxes MKTN.674211.009",
+      "quantity": 1,
+      "parameters": {
+        "recovery_time": 3,
+        "availability": 0.99999998,
+        "probability_by_time": {
+          "158": 0.9999995,
+          "125": 0.999999997
+        }
+      },
+      "source_table": "tables 4 and 5",
+      "confidence": "high"
+    }
+  ],
+  "schemes": [
+    {
+      "id": "sne_top",
+      "name": "SNE top-level reliability scheme",
+      "type": "series",
+      "root": {
+        "type": "series",
+        "children": ["B1", "B2", "B3", "B4", "B5", "B6"]
+      },
+      "source_reference": "Reference document: section 10, tables 4 and 5",
+      "confidence": "high",
+      "notes": [
+        "This top-level normalized scheme reproduces the tabular reference results.",
+        "The full textual section 5 also describes a reserve group 175 of 204; it is recorded separately as manual review."
+      ]
+    },
+    {
+      "id": "sne_document_demo",
+      "name": "SNE document visual demo scheme",
+      "type": "series",
+      "root": {
+        "type": "series",
+        "children": [
+          "B1",
+          {
+            "type": "nested_scheme",
+            "id": "B2",
+            "name": "Auxiliary energy block MKTN.563255.007",
+            "scheme_id": "auxiliary_needs_chain_4"
+          },
+          "B3",
+          "B4",
+          "B5",
+          "B6"
+        ]
+      },
+      "source_reference": "Reference document: section 5 visual structure, tables 4 and 5 for numeric values",
+      "confidence": "high",
+      "notes": [
+        "This is the demo shown by the SNE button: input -> aggregate reserve 175 of 204 -> component chain -> output.",
+        "The 175-of-204 reserve is intentionally one aggregate block, not 204 separate blocks.",
+        "The nested auxiliary chain is visual; its four internal probabilities multiply to the table 4 aggregate value for B2.",
+        "The k-of-N sliding loaded reserve formula is not claimed as verified; the block uses reviewed tabular P/Kg."
+      ]
+    },
+    {
+      "id": "auxiliary_needs_chain_4",
+      "name": "Auxiliary needs internal visual chain",
+      "type": "series",
+      "root": {
+        "type": "series",
+        "children": ["B2A", "B2B", "B2C", "B2D"]
+      },
+      "source_reference": "Demo decomposition of table 4 aggregate B2",
+      "confidence": "demo",
+      "notes": [
+        "The four internal blocks are a readable visual decomposition for the editor demo.",
+        "Their product is normalized to the documented aggregate values of B2 for 158 h, 125 h and Kg."
+      ]
+    },
+    {
+      "id": "energy_block_chain_154",
+      "name": "Energy block - 154 identical elements in series",
+      "type": "series",
+      "root": {
+        "type": "series",
+        "repeat": 154,
+        "child": {
+          "id": "energy_cell",
+          "name": "Energy block identical element",
+          "type": "element",
+          "parameters": {
+            "lambda_work": 0.000000001
+          }
+        }
+      },
+      "source_reference": "Reference document: section 5 textual description",
+      "confidence": "medium",
+      "notes": [
+        "Demonstrates substitution N = 154 for a repeated series chain."
+      ]
+    },
+    {
+      "id": "sne_reserve_group_175_of_204",
+      "name": "SNE reserve group 175 of 204",
+      "type": "reserve_group",
+      "root": {
+        "type": "reserve_group",
+        "id": "R1",
+        "name": "Functional loaded reserve 175 of 204",
+        "reserve_type": "sliding_loaded",
+        "k_required": 175,
+        "n_total": 204,
+        "paired_elements": ["energy_block", "distribution_unit"]
+      },
+      "source_reference": "Reference document: section 5 textual description",
+      "confidence": "medium",
+      "notes": [
+        "Exact k-of-N formula is not marked as verified and must be checked manually before normative use."
+      ]
+    }
+  ],
+  "formulas": [
+    {
+      "id": "STRUCT.SERIES.P",
+      "verification_status": "project_method",
+      "role": "selected automatically for top-level series"
+    },
+    {
+      "id": "DOC.SLIDING_LOADED_RESERVE_K_OF_N.P",
+      "verification_status": "needs_review",
+      "role": "placeholder for reserve 175 of 204"
+    }
+  ],
+  "expected_results": {
+    "sne_top": {
+      "P_158": 0.998900209,
+      "P_125": 0.999994298,
+      "Kg": 0.999999801
+    },
+    "sne_document_demo": {
+      "P_158": 0.998900209,
+      "P_125": 0.999994298,
+      "Kg": 0.999999801
+    }
+  },
+  "warnings": [
+    "Reference source contains values that appear inconsistent between table products and conclusion text; table values are used here.",
+    "DOC/PDF figures are not imported as semantic schemes.",
+    "The demo visualizes the 175-of-204 reserve as one aggregate block; it is not expanded into 204 elements."
+  ],
+  "manual_review_required": [
+    "Formula for sliding loaded reserve 175 of 204.",
+    "Any imported formula damaged by DOC/PDF conversion.",
+    "Durability/resource calculations if they are used as normative outputs."
+  ],
+  "conclusions": [
+    "The normalized top-level scheme can be loaded, converted to the editor graph, calculated, and compared with the reference tables.",
+    "The example is a reference dataset, not a document-name-specific parser."
+  ]
+}
