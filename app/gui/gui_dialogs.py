@@ -582,15 +582,23 @@ class BlockPropsDialog(QDialog):
         self.inp_name = QLineEdit(name)
         form.addRow("Имя блока:", self.inp_name)
 
+        self.inputs: dict[str, QLineEdit | QComboBox] = {}
+        self.row_labels: dict[str, QLabel] = {}
+        self.row_widgets: dict[str, QWidget] = {}
+        self._add_line_field(
+            form,
+            "formula_symbol",
+            "Короткое обозначение блока в формулах и на схеме. Например: B1, B2, P1.",
+            props.get("formula_symbol", name),
+            "Обозначение в формуле:",
+        )
+
         self.type_combo = QComboBox()
         for role, label in self.BLOCK_TYPES:
             self.type_combo.addItem(label, role)
         self.type_combo.setToolTip("Тип блока задает инженерный смысл элемента для расчета, валидации и генератора формул.")
         form.addRow("Тип блока:", self.type_combo)
 
-        self.inputs: dict[str, QLineEdit | QComboBox] = {}
-        self.row_labels: dict[str, QLabel] = {}
-        self.row_widgets: dict[str, QWidget] = {}
         self._add_line_field(form, "lambda", "Интенсивность отказов λ.", props.get("lambda", 0.001), "Интенсивность отказов λ:")
         self._add_line_field(form, "Tv", "Среднее время восстановления Tв.", props.get("Tv", 10.0), "Среднее время восстановления Tв:")
         self._add_line_field(form, "t", "Горизонт расчета по времени t.", props.get("t", 1000), "Горизонт расчета t:")
@@ -663,13 +671,13 @@ class BlockPropsDialog(QDialog):
     def _refresh_type_ui(self) -> None:
         role = self.current_block_role()
         visible_by_role = {
-            "ordinary": {"lambda", "Tv", "t"},
-            "reserve": {"lambda", "Tv", "t", "reserve_count", "reserve_type"},
-            "k_of_n": {"lambda", "Tv", "t", "k_required", "n_total", "reserve_type"},
-            "subscheme": {"lambda", "Tv", "t"},
-            "passive": {"lambda", "Tv", "t"},
+            "ordinary": {"formula_symbol", "lambda", "Tv", "t"},
+            "reserve": {"formula_symbol", "lambda", "Tv", "t", "reserve_count", "reserve_type"},
+            "k_of_n": {"formula_symbol", "lambda", "Tv", "t", "k_required", "n_total", "reserve_type"},
+            "subscheme": {"formula_symbol", "lambda", "Tv", "t"},
+            "passive": {"formula_symbol", "lambda", "Tv", "t"},
         }
-        active_keys = visible_by_role.get(role, {"lambda", "Tv", "t"})
+        active_keys = visible_by_role.get(role, {"formula_symbol", "lambda", "Tv", "t"})
         for key in self.row_widgets:
             visible = key in active_keys
             self.row_labels[key].setVisible(visible)
@@ -690,6 +698,7 @@ class BlockPropsDialog(QDialog):
         role = self.current_block_role()
         props: dict[str, object] = {
             "block_role": role,
+            "formula_symbol": self._text_value("formula_symbol", default=self.get_name()),
             "lambda": self._float_value("lambda", default=0.0),
             "Tv": self._float_value("Tv", default=0.0),
             "t": self._float_value("t", default=1000.0),
@@ -726,6 +735,11 @@ class BlockPropsDialog(QDialog):
         widget = self.inputs[key]
         assert isinstance(widget, QComboBox)
         return str(widget.currentData() or "")
+
+    def _text_value(self, key: str, default: str = "") -> str:
+        widget = self.inputs[key]
+        assert isinstance(widget, QLineEdit)
+        return widget.text().strip() or default
 
 
 REPORT_FORMATS = [

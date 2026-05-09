@@ -39,7 +39,7 @@ from app.formulas.formula_rendering import (
     render_latex_to_png_bytes,
     split_latex_formula_for_display,
 )
-from app.formulas.graph_formula_builder import build_formula_for_scheme
+from app.formulas.graph_formula_builder import block_formula_symbol, build_formula_for_scheme
 from app.gui.gui_dialogs import BlockPropsDialog
 from app.demo.library_templates import built_in_templates
 from app.core.reliability_contribution_analysis import (
@@ -98,6 +98,21 @@ def _format_contribution_value(value: float) -> str:
     if abs(numeric) >= 1000 or (0 < abs(numeric) < 0.001):
         return f"{numeric:.4g}"
     return f"{numeric:.6g}"
+
+
+def _is_uuid_like(value: object) -> bool:
+    try:
+        uuid.UUID(str(value))
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def _display_badge_id(value: object) -> str:
+    text = str(value or "").strip()
+    if not text or _is_uuid_like(text):
+        return ""
+    return text if len(text) <= 18 else ""
 
 
 def _render_latex_to_png_bytes(line: str) -> bytes:
@@ -291,11 +306,13 @@ class RBDBlock(QGraphicsObject):
         self.props = dict(props or _default_block_params())
         self.is_subscheme = is_subscheme
         self.nested_scheme = nested_scheme
+        if self.direction not in {"in", "out", "junction"} and not str(self.props.get("formula_symbol", "") or "").strip():
+            self.props["formula_symbol"] = block_formula_symbol(self._temporary_model())
         self.attached_lines: list[ConnectionLine] = []
         self.is_connecting = False
         self.validation_state = ""
         self.validation_message = ""
-        self.setToolTip(f"{self._formula_badge_text()}: {self.name}" if self._formula_badge_text() else self.name)
+        self._refresh_tooltip()
         self.setPos(self._snap_value(x), self._snap_value(y))
         self.setFlags(
             QGraphicsItem.GraphicsItemFlag.ItemIsMovable
@@ -361,15 +378,35 @@ class RBDBlock(QGraphicsObject):
             return ""
         if self.is_subscheme and self.nested_scheme is not None:
             nested_ids = [
-                str(block.block_id)
+                _display_badge_id(block_formula_symbol(block))
                 for block in self.nested_scheme.blocks
                 if block.kind not in {"in", "out", "junction"}
             ]
+            nested_ids = [item for item in nested_ids if item]
             if len(nested_ids) >= 2:
                 return f"{nested_ids[0]}…{nested_ids[-1]}"
             if nested_ids:
                 return nested_ids[0]
-        return str(self.block_id)
+        return _display_badge_id(block_formula_symbol(self._temporary_model()))
+
+    def _temporary_model(self) -> BlockModel:
+        return BlockModel(
+            block_id=self.block_id,
+            name=self.name,
+            kind=self.direction,
+            x=self.pos().x(),
+            y=self.pos().y(),
+            params=self.props.copy(),
+            is_subscheme=self.is_subscheme,
+            nested_scheme=self.nested_scheme,
+        )
+
+    def _refresh_tooltip(self) -> None:
+        badge = self._formula_badge_text()
+        if badge:
+            self.setToolTip(f"Обозначение в формуле: {badge}\nНазвание блока: {self.name}")
+        else:
+            self.setToolTip(self.name)
 
     def boundingRect(self) -> QRectF:  # noqa: N802
         rect = self._base_rect()
@@ -386,7 +423,7 @@ class RBDBlock(QGraphicsObject):
         self.validation_state = state
         self.validation_message = message
         badge = self._formula_badge_text()
-        tooltip = f"{badge}: {self.name}" if badge else self.name
+        tooltip = f"Обозначение в формуле: {badge}\nНазвание блока: {self.name}" if badge else self.name
         self.setToolTip(f"{tooltip}\n{message}" if message else tooltip)
         self.update()
 
@@ -596,6 +633,7 @@ class RBDBlock(QGraphicsObject):
                 self.name = new_name.strip()
                 for line in self.attached_lines:
                     line.update_path()
+                self._refresh_tooltip()
                 self.block_changed.emit()
                 self.update()
         elif selected == props_action:
@@ -621,6 +659,7 @@ class RBDBlock(QGraphicsObject):
                 self.nested_scheme = None
             for line in self.attached_lines:
                 line.update_path()
+            self._refresh_tooltip()
             self.block_changed.emit()
             self.update()
 

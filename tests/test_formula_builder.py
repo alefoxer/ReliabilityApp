@@ -111,6 +111,25 @@ def single_block_scheme() -> SchemeModel:
     )
 
 
+def scheme_with_uuid_ids_and_formula_symbols() -> SchemeModel:
+    first_id = "54666a95-6493-4a0d-a000-000000000001"
+    second_id = "284fb4c3-b08b-4b95-a000-000000000002"
+    return SchemeModel(
+        name="UuidIds",
+        blocks=[
+            BlockModel("start", "Start", "in", 0, 0, {}),
+            BlockModel(first_id, "Блок 1", "right", 100, 0, {"lambda": 0.001, "formula_symbol": "B1"}),
+            BlockModel(second_id, "Блок 2", "right", 200, 0, {"lambda": 0.002, "formula_symbol": "B2"}),
+            BlockModel("end", "End", "out", 300, 0, {}),
+        ],
+        connections=[
+            ConnectionModel("c1", "start", "out", first_id, "left"),
+            ConnectionModel("c2", first_id, "right", second_id, "left"),
+            ConnectionModel("c3", second_id, "right", "end", "in"),
+        ],
+    )
+
+
 def empty_scheme() -> SchemeModel:
     return SchemeModel(
         name="Empty",
@@ -400,6 +419,18 @@ def test_formula_builder_for_single_block_scheme():
     assert formula.is_exact
     assert "Pсист(t) = B1" in formula.text
     assert formula.structural.endswith("B1") or "B1" in formula.structural
+
+
+def test_formula_builder_uses_formula_symbols_not_internal_uuid_ids():
+    scheme = scheme_with_uuid_ids_and_formula_symbols()
+    formula = build_formula_for_scheme(scheme)
+
+    assert "B1" in formula.text
+    assert "B2" in formula.text
+    assert "54666a95" not in formula.text
+    assert "284fb4c3" not in formula.text
+    assert formula.symbols["B1"].endswith("«Блок 1»")
+    assert formula.symbols["B2"].endswith("«Блок 2»")
 
 
 def test_formula_builder_for_long_series_chain_is_not_hardcoded():

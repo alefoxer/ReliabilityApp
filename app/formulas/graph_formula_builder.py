@@ -12,6 +12,7 @@ from __future__ import annotations
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from math import exp, log
+import re
 from typing import Callable
 
 import sympy as sp
@@ -733,8 +734,24 @@ def _is_manual_review_text(text: object) -> bool:
     return any(marker in value for marker in markers)
 
 
+def block_formula_symbol(block: BlockModel) -> str:
+    """Return the user-facing symbol used in structural formulas."""
+    params = dict(block.params or {})
+    explicit_symbol = str(params.get("formula_symbol", "") or "").strip()
+    base_name = explicit_symbol or _default_formula_symbol_from_name(str(block.name or block.block_id))
+    return _safe_symbol_name(base_name)
+
+
+def _default_formula_symbol_from_name(value: str) -> str:
+    text = str(value or "").strip()
+    match = re.match(r"^(?:block|блок)\s*([0-9]+)$", text, flags=re.IGNORECASE)
+    if match:
+        return f"B{match.group(1)}"
+    return text
+
+
 def _metric_symbol(block: BlockModel, metric: str) -> sp.Symbol:
-    base_name = _safe_symbol_name(str(block.block_id or block.name))
+    base_name = block_formula_symbol(block)
     if metric == "P":
         return sp.Symbol(base_name)
     return sp.Symbol(f"K_{base_name}")

@@ -54,7 +54,7 @@ def test_sne_demo_resource_is_available_and_packaged_for_exe() -> None:
     from app.demo.demo_scenarios import SNE_DEMO_PATH
 
     assert SNE_DEMO_PATH.exists()
-    assert '("examples/imported/sne_emrtu_project.json", "examples/imported")' in spec_source
+    assert '("examples", "examples")' in spec_source
 
 
 def test_sne_demo_user_formula_is_russian_and_hides_manual_review_text() -> None:

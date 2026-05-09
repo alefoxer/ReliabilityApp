@@ -1,18 +1,23 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+from PyInstaller.utils.hooks import collect_data_files
 
 
-hiddenimports = []
-hiddenimports += collect_submodules("docx")
-hiddenimports += collect_submodules("openpyxl")
-hiddenimports += collect_submodules("PIL")
+hiddenimports = [
+    "docx",
+    "docx.enum.text",
+    "docx.shared",
+    "openpyxl",
+    "openpyxl.drawing.image",
+    "openpyxl.styles",
+    "openpyxl.utils",
+    "PIL.Image",
+    "yaml",
+]
 
 datas = [
-    ("resources/app_icon.ico", "resources"),
-    ("resources/app_icon.png", "resources"),
-    ("examples/imported/sne_emrtu_project.json", "examples/imported"),
-    ("examples/imported/simple_series_project.yaml", "examples/imported"),
+    ("resources", "resources"),
+    ("examples", "examples"),
     ("app/demo/db_modules.json", "app/demo"),
     ("docs", "docs"),
 ]
@@ -30,7 +35,29 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=[
+        "IPython",
+        "PIL.ImageTk",
+        "PySide6",
+        "anyio",
+        "dask",
+        "fsspec",
+        "gradio",
+        "librosa",
+        "llvmlite",
+        "numba",
+        "pandas",
+        "pydantic",
+        "pytest",
+        "scipy",
+        "sklearn",
+        "soundfile",
+        "sqlalchemy",
+        "tensorflow",
+        "torch",
+        "transformers",
+        "uvicorn",
+    ],
     noarchive=False,
     optimize=0,
 )
