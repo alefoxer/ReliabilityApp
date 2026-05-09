@@ -125,13 +125,28 @@ def _localize_sne_demo_scheme(scheme: SchemeModel) -> None:
         "B2C": "Внутренний участок цепи собственных нужд 3",
         "B2D": "Внутренний участок цепи собственных нужд 4",
     }
+    symbols_by_id = {
+        "B1": "B1",
+        "B2": "B2",
+        "B3": "B3",
+        "B4": "B4",
+        "B5": "B5",
+        "B6": "B6",
+        "B2A": "B2A",
+        "B2B": "B2B",
+        "B2C": "B2C",
+        "B2D": "B2D",
+    }
     fallback_index = 1
     for block in scheme.iter_blocks_recursive():
         if block.block_id in names_by_id:
             block.name = names_by_id[block.block_id]
         elif block.kind not in {"in", "out", "junction"}:
             block.name = f"Блок{fallback_index}"
+            symbols_by_id[block.block_id] = f"B{fallback_index}"
             fallback_index += 1
+        if block.kind not in {"in", "out", "junction"}:
+            block.params["formula_symbol"] = symbols_by_id.get(block.block_id, block.params.get("formula_symbol", block.name))
         if block.params.get("block_role") == "k_of_n":
             block.params["suppress_manual_review_warning"] = True
         if block.nested_scheme is not None:

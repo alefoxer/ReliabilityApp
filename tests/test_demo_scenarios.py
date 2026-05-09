@@ -82,6 +82,12 @@ def test_sne_demo_user_formula_is_russian_and_hides_manual_review_text() -> None
     assert recursive_names["B2C"] == "Внутренний участок цепи собственных нужд 3"
     assert recursive_names["B2D"] == "Внутренний участок цепи собственных нужд 4"
     assert "B2A" in formula.text
+    demo_symbols = {"B1", "B2A", "B2B", "B2C", "B2D", "B3", "B4", "B5", "B6"}
+    assert formula.symbols.keys() <= (demo_symbols | {f"K_{symbol}" for symbol in demo_symbols})
+    for block in demo.scheme.iter_blocks_recursive():
+        if block.kind not in {"in", "out", "junction"}:
+            assert block.params.get("formula_symbol")
+            assert str(block.name) not in formula.text
     assert any("Внутренний участок цепи собственных нужд 1" in text for text in formula.symbols.values())
     for forbidden in ("Auxiliary", "internal chain", "manual", "needs_review", "requires manual", "требуется ручная проверка", "ручн"):
         assert forbidden.lower() not in visible_text.lower()
